@@ -32,6 +32,9 @@ public class GETexample extends Activity {
     // http://code.google.com/apis/websearch/docs/ for documentation and suggested
     // replacement.  We're just using it for illustration of the GET method here.
 
+    // This returns random numbers
+    //https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new
+
     private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
     private String searchString = "butterfly";
     ProgressBar progressBar;
