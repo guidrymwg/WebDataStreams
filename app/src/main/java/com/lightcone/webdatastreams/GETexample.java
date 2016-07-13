@@ -1,16 +1,23 @@
 package com.lightcone.webdatastreams;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.http.HttpEntity;
+/*import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.util.EntityUtils;*/
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,6 +84,73 @@ public class GETexample extends Activity {
         return stringBuilder.toString();
     }
 
+    // Example of using HttpURLConnection for a GET request.  The string getURL
+    // is assumed to give the full url with the appended data payload (with the data
+    // entries URLEncoded where necessary).  For example,
+    //   https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=butterfly
+    // The result of the web request is returned as a string by this method.
+
+    public String getRequest(String getURL){
+        URL url = null;
+        String result = null;
+        try {
+            url = new URL(getURL);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            InputStream in = null;
+            try {
+                in = new BufferedInputStream(urlConnection.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            result = readStream(in);
+        } finally {
+            // Disconnecting releases resources held by connection so they can be closed or reused.
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+        return result;
+    }
+
+
+    // Reader for the GET response stream
+    private String readStream(InputStream is){
+
+        // Begin reading the GET input stream line by line
+        Log.i(TAG, "\n\nBegin reading GET input stream");
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr, 8192);    // 2nd arg is buffer size
+        String total = "";
+
+        try {
+            String test;
+            while (true){
+                test = br.readLine();
+                if(test == null) break;    // readLine() returns null if no more lines
+                Log.i(TAG, test);
+                total += test;
+            }
+            isr.close();
+            is.close();
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "\n\nThat is all" );
+        Log.i(TAG, "\n test="+total);
+        return total;
+    }
+
+
     // Use AsyncTask to perform the web download on a background thread.  The three
     // argument types inside the < > are (1) a type for the input parameters (Strings in this case),
     // (2) a type for any published progress during the background task (Void in this case,  because
@@ -92,26 +166,18 @@ public class GETexample extends Activity {
             // The notation String... params means that the input parameters are an array of
             // strings.  In new BackgroundLoad().execute(getURL, searchString) above we are
             // passing two arguments, so params[0] will correspond to getURL and and params[1]
-            // will correspond to searchString.
+            // will correspond to the search string.
 
             String GETResponseString = null;
 
-            // Sample GET method. See
-            // http://www.softwarepassion.com/android-series-get-post-and-multipart-post-requests/
-
+            String address = null;
             try {
-                HttpClient client = new DefaultHttpClient();
-                HttpGet get = new HttpGet(params[0] + params[1]);
-                HttpResponse responseGet = client.execute(get);
-                HttpEntity resEntityGet = responseGet.getEntity();
-                GETResponseString = EntityUtils.toString(resEntityGet);
-                if (resEntityGet != null) {
-                    Log.i(TAG, "\nGET response:");
-                    Log.i(TAG, GETResponseString);
-                }
-            } catch (Exception e) {
+                address = params[0] + URLEncoder.encode(params[1], "UTF-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+            Log.i(TAG, " Address = "+address);
+            GETResponseString = getRequest(address);
             return GETResponseString;
         }
 
