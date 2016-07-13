@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WebDataStreams</string>
+    <string name="action_settings">Settings</string>
+    <string name="check_label">Check Network Status</string>
+    <string name="GET_label">GET Access Example</string>
+    <string name="POST_label">POST Access Example</string>
+    <string name="bitmap_label">Bitmap Example</string>
+    <string name="main_title">Web Data Streams</string>
+    <string name="netstatus">NETWORK STATUS</string>
+    <string name="poststatus">POST Return:</string>
+    <string name="bitDescription">Image of Mars</string>
 </resources>
