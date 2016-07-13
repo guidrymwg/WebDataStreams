@@ -21,7 +21,6 @@
         </activity>
         <activity android:name=".CheckNetStatus" android:label="CheckNetStatus"> </activity>
         <activity android:name=".GETexample" android:label="GETexample"> </activity>
-        <activity android:name=".POSTexample" android:label="POSTexample"> </activity>
         <activity android:name=".BitmapExample" android:label="BitmapExample"> </activity>
     </application>
 

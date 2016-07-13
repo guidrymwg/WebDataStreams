@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements  android.view.Vie
                 break;
 
             case R.id.POST_button:
-                Intent k = new Intent(this, POSTexample.class);
-                startActivity(k);
+                //Intent k = new Intent(this, POSTexample.class);
+                //startActivity(k);
                 break;
 
             case R.id.bitmap_button:

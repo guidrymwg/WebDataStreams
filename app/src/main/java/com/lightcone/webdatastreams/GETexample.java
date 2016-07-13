@@ -41,9 +41,12 @@ public class GETexample extends Activity {
 
     // This returns random numbers
     //https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new
+    //https://developer.android.com/reference/packages.html#q=runtime%20permissions
 
-    private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
-    private String searchString = "butterfly";
+    private String getURL = "https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new";
+    private String searchString = "";
+    //private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
+    //private String searchString = "butterfly";
     ProgressBar progressBar;
 
 
