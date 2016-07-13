@@ -44,7 +44,8 @@ public class GETexample extends AppCompatActivity {
     //https://developer.android.com/reference/packages.html#q=runtime%20permissions
     // http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=large+magellanic+cloud&submit=SIMBAD+search
 
-    private String getURL = "http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=large+magellanic+cloud&submit=SIMBAD+search";
+    //private String getURL = "http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=Large+Magellanic+Cloud&submit=SIMBAD+search";
+    private String getURL = "https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new";
     private String searchString = "";
     //private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
     //private String searchString = "butterfly";
@@ -57,6 +58,8 @@ public class GETexample extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.getexample);
+
+        searchString = "?Ident="+searchString+"&submit=SIMBAD+search";
 
         // Execute the GET request on a background thread
         progressBar = (ProgressBar) findViewById(R.id.GET_bar);
@@ -176,11 +179,12 @@ public class GETexample extends AppCompatActivity {
 
             String address = null;
             try {
-                address = params[0] + URLEncoder.encode(params[1], "UTF-8");
+                address = params[0] + URLEncoder.encode(params[1], "ASCII");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            Log.i(TAG, " Address = "+address);
+            Log.i(TAG, "Search ="+params[1]);
+            Log.i(TAG, "Address = "+address);
             GETResponseString = getRequest(address);
             return GETResponseString;
         }
