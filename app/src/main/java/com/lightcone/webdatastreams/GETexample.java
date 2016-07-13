@@ -22,7 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-public class GETexample extends Activity {
+public class GETexample extends AppCompatActivity {
 
     private static final String TAG = "WEBSTREAM";
 
@@ -42,8 +42,9 @@ public class GETexample extends Activity {
     // This returns random numbers
     //https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new
     //https://developer.android.com/reference/packages.html#q=runtime%20permissions
+    // http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=large+magellanic+cloud&submit=SIMBAD+search
 
-    private String getURL = "https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new";
+    private String getURL = "http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=large+magellanic+cloud&submit=SIMBAD+search";
     private String searchString = "";
     //private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
     //private String searchString = "butterfly";
@@ -204,7 +205,9 @@ public class GETexample extends Activity {
             // Display the response in a webview
             WebView wv = new WebView(context);
             setContentView(wv);
-            // Have to catch following because they are thrown in method processResponse(s)
+            wv.loadData(s, "text/html", "utf-8");
+
+            /*// Have to catch following because they are thrown in method processResponse(s)
             try {
                 wv.loadData(parseJSON(s), "text/html", "utf-8");
             } catch (IllegalStateException e) {
@@ -215,7 +218,7 @@ public class GETexample extends Activity {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 }
