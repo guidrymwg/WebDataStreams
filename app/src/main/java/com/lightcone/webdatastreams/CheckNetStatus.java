@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class CheckNetStatus extends Activity {
+public class CheckNetStatus extends AppCompatActivity {
 
     private static final String TAG = "WEBSTREAM";
     // Examples: "127.0.0.1"(= "localhost"); "csep10.phys.utk.edu"; "74.125.47.103"; "google.com";

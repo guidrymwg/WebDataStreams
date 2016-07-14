@@ -12,12 +12,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 
-/*import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;*/
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +28,11 @@ import android.widget.ProgressBar;
 public class GETexample extends AppCompatActivity {
 
     private static final String TAG = "WEBSTREAM";
-    private static final int num = 5;
-    private static final int lower = 0;
-    private static final int upper = 100;
+
+    // Range for random integer generator
+    private static final int num = 10;       // Number of random integers
+    private static final int lower = 0;     // Lower limit of interval
+    private static final int upper = 100;   // Upper limit of interval
 
 
     // Following url address accesses a deprecated Google search API.  See
@@ -219,20 +215,9 @@ public class GETexample extends AppCompatActivity {
 
             s="<p>"+num+" integers chosen randomly between 0 and 100:</p>" +
                     "<center><h3><pre>"+s+"</pre></h3></center>";
+            s+="Source: <em>https://www.random.org</em>";
             wv.loadData(s, "text/html", "utf-8");
 
-            /*// Have to catch following because they are thrown in method processResponse(s)
-            try {
-                wv.loadData(parseJSON(s), "text/html", "utf-8");
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
         }
     }
 }
