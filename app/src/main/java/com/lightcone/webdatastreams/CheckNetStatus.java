@@ -10,16 +10,13 @@ import java.util.Enumeration;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CheckNetStatus extends AppCompatActivity {
 
@@ -85,7 +82,6 @@ public class CheckNetStatus extends AppCompatActivity {
         netInfo = conman.getActiveNetworkInfo();
 
         // Check wifi status
-        //netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if(netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
             wifiAvailable = netInfo.isAvailable();
             wifiConnected = netInfo.isConnected();
@@ -93,7 +89,6 @@ public class CheckNetStatus extends AppCompatActivity {
         }
 
         // Check telephony status
-        //netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         if(netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
             phoneAvailable = netInfo.isAvailable();
             phoneConnected = netInfo.isConnected();
@@ -108,6 +103,8 @@ public class CheckNetStatus extends AppCompatActivity {
 
         ipInteger = lookupHost(serverURL);
         //Log.i(TAG, "ipInteger="+ipInteger);
+
+        ipNumber = getLocalIpAddress();
 
         // Add status booleans to the Bundle netStatus
 
@@ -302,13 +299,10 @@ public class CheckNetStatus extends AppCompatActivity {
             // extracting information from the Bundle as a string displayed to screen.
 
             netstat = data;
-            String net1 = " phone available = "+netstat.getBoolean("phoneAvailable");
-            String net2 = " phone connected = "+netstat.getBoolean("phoneConnected");
-            String net3 =  " wifi available = "+netstat.getBoolean("wifiAvailable");
-            String net4 = " wifi connected = "+netstat.getBoolean("wifiConnected");
-            String net5 = " IP = "+netstat.getString("ipNumber");
-            String net6 = " IPinteger = "+netstat.getInt("ipInteger");
-            String netString = net1+"\n"+net2+"\n"+net3+"\n"+net4+"\n"+net5+"\n"+net6;
+            String net1 = " phone connected = "+netstat.getBoolean("phoneConnected");
+            String net2 = " wifi connected = "+netstat.getBoolean("wifiConnected");
+            String net3 = " IP = "+netstat.getString("ipNumber");
+            String netString = net1+"\n"+net2+"\n"+net3;
             Log.i(TAG, netString);
             tv.append("\n"+netString);
         }
