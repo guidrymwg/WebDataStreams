@@ -4,6 +4,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,7 +19,7 @@ import android.widget.TextView;
 public class CheckNetStatus extends AppCompatActivity {
 
     private static final String TAG = "WEBSTREAM";
-    private static final String URL ="";
+    private static final String URL = "";
     private static TextView tv;
     public Bundle netstat;
 
@@ -43,7 +44,7 @@ public class CheckNetStatus extends AppCompatActivity {
 
     // Method to return network and server connections status
 
-    public Bundle networkStatus(){
+    public Bundle networkStatus() {
 
         Bundle netStatus = new Bundle();
         Boolean wifiConnected = null;
@@ -52,29 +53,33 @@ public class CheckNetStatus extends AppCompatActivity {
         NetworkInfo netInfo;
 
         // Get a connectivity manager instance
-        ConnectivityManager conman = (ConnectivityManager) getSystemService (
+        ConnectivityManager conman = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);
 
         netInfo = conman.getActiveNetworkInfo();
 
-        // Check wifi status
-        if(netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            wifiConnected = netInfo.isConnected();
-            Log.i(TAG,"Network Type:  "+netInfo.getTypeName());
-        }
+        // Guard against netInfo=null (no network detected)
 
-        // Check telephony status
-        if(netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-            phoneConnected = netInfo.isConnected();
+        if(netInfo != null) {
+            // Check wifi status
+            if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                wifiConnected = netInfo.isConnected();
+                Log.i(TAG, "Network Type:  " + netInfo.getTypeName());
+            }
+
+            // Check telephony status
+            if (netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                phoneConnected = netInfo.isConnected();
+            }
         }
 
         ipNumber = getLocalIpAddress();
 
         // Add network status variable values to the Bundle netStatus
 
-        if(wifiConnected != null) netStatus.putBoolean("wifiConnected", wifiConnected);
-        if(phoneConnected != null)netStatus.putBoolean("phoneConnected", phoneConnected);
-        if(ipNumber != null)netStatus.putString("ipNumber", ipNumber);
+        if (wifiConnected != null) netStatus.putBoolean("wifiConnected", wifiConnected);
+        if (phoneConnected != null) netStatus.putBoolean("phoneConnected", phoneConnected);
+        if (ipNumber != null) netStatus.putString("ipNumber", ipNumber);
 
         return netStatus;
     }
@@ -102,18 +107,20 @@ public class CheckNetStatus extends AppCompatActivity {
     }
 
 
-    /**  Use AsyncTask to perform the network checks on a background thread.  The three
-     argument types inside < > are (1) a type for the input parameters (String in this case),
-     (2) a type for published progress during the background task (String in this case,
-     since we will illustrate by publishing a short string), and (3) a type
-     for the object returned from the background task (in this case it is a Bundle). If one of
-     the argument types is not needed, specify it by Void.  For example, if our task used one or
-     more String input parameters but did not publish progress and did not return anything
-     the pattern would be <String, Void, Void>, where String implies an array of input strings.
-     It is convenient to implement AsyncTask as an inner class (as we do here) because this
-     gives it access to the fields and methods of the enclosing class.  */
+    /**
+     * Use AsyncTask to perform the network checks on a background thread.  The three
+     * argument types inside < > are (1) a type for the input parameters (String in this case),
+     * (2) a type for published progress during the background task (String in this case,
+     * since we will illustrate by publishing a short string), and (3) a type
+     * for the object returned from the background task (in this case it is a Bundle). If one of
+     * the argument types is not needed, specify it by Void.  For example, if our task used one or
+     * more String input parameters but did not publish progress and did not return anything
+     * the pattern would be <String, Void, Void>, where String implies an array of input strings.
+     * It is convenient to implement AsyncTask as an inner class (as we do here) because this
+     * gives it access to the fields and methods of the enclosing class.
+     */
 
-    private class BackgroundLoad extends AsyncTask <String, String,  Bundle> {
+    private class BackgroundLoad extends AsyncTask<String, String, Bundle> {
 
         // Executes the task on a background thread.  Note: since this is a background
         // thread, we are strictly forbidden to touch any views on the main UI thread from this
@@ -134,14 +141,14 @@ public class CheckNetStatus extends AppCompatActivity {
 
             publishProgress("\n\nStarting background thread\n");
 
-            return networkStatus() ;
+            return networkStatus();
         }
 
         // Executes on the main UI thread before the thread run by doInBackground.  Since
         // it executes on the main UI thread we are free to interact with views on the main
         // thread from this method.
 
-        protected void onPreExecute () {
+        protected void onPreExecute() {
             Log.i(TAG, "\n---onPreExecute---");
         }
 
@@ -166,7 +173,7 @@ public class CheckNetStatus extends AppCompatActivity {
         // here.
 
         @Override
-        protected void onPostExecute(Bundle data){
+        protected void onPostExecute(Bundle data) {
 
             // Stop the progress dialog
 
@@ -178,12 +185,12 @@ public class CheckNetStatus extends AppCompatActivity {
             // extracting information from the Bundle as a string displayed to screen.
 
             netstat = data;
-            String net1 = " phone connected = "+netstat.getBoolean("phoneConnected");
-            String net2 = " wifi connected = "+netstat.getBoolean("wifiConnected");
-            String net3 = " IP = "+netstat.getString("ipNumber");
-            String netString = net1+"\n"+net2+"\n"+net3;
+            String net1 = " phone connected = " + netstat.getBoolean("phoneConnected");
+            String net2 = " wifi connected = " + netstat.getBoolean("wifiConnected");
+            String net3 = " IP = " + netstat.getString("ipNumber");
+            String netString = net1 + "\n" + net2 + "\n" + net3;
             Log.i(TAG, netString);
-            tv.append("\n"+netString);
+            tv.append("\n" + netString);
         }
     }
 }

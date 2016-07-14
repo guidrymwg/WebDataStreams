@@ -10,11 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.NoSuchAlgorithmException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
@@ -31,29 +26,16 @@ public class GETexample extends AppCompatActivity {
 
     // Range for random integer generator
     private static final int num = 10;       // Number of random integers
-    private static final int lower = 0;     // Lower limit of interval
-    private static final int upper = 100;   // Upper limit of interval
+    private static final int lower = 0;      // Lower limit of interval
+    private static final int upper = 100;    // Upper limit of interval
 
+    // This returns num random integers in the interval lower to upper
 
-    // Following url address accesses a deprecated Google search API.  See
-    // http://code.google.com/apis/websearch/docs/ for documentation and suggested
-    // replacement.  We're just using it for illustration of the GET method here.
-
-    // This returns random numbers
-    //https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new
-    //https://developer.android.com/reference/packages.html#q=runtime%20permissions
-    // http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=large+magellanic+cloud&submit=SIMBAD+search
-
-    //private String getURL = "http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=Large+Magellanic+Cloud&submit=SIMBAD+search";
-    String url = "https://www.random.org/integers/?num="+num+"&min="+lower+"&min=1&max="
-            +upper+"&col=1&base=10&format=plain&rnd=new";
-    private String getURL=url;
-    //private String getURL = "https://www.random.org/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new";
+    String url = "https://www.random.org/integers/?num=" + num + "&min=" + lower + "&min=1&max="
+            + upper + "&col=1&base=10&format=plain&rnd=new";
+    private String getURL = url;
     private String searchString = "";
-    //private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
-    //private String searchString = "butterfly";
     ProgressBar progressBar;
-
 
     Context context = this;   // Store this context for webview invoked later from inner class
 
@@ -71,34 +53,13 @@ public class GETexample extends AppCompatActivity {
         }
     }
 
-    // JSON parser, returning HTML formatted string. Adapted from The Android Developer's
-    // Cookbook, J. Steele and N. To, p. 208.
-
-    public String parseJSON (String resp) throws IllegalStateException,
-            IOException, JSONException, NoSuchAlgorithmException {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        JSONObject response = new JSONObject(resp).getJSONObject("responseData");
-        JSONArray array = response.getJSONArray("results");
-        for(int i=0; i<array.length(); i++){
-            String title = array.getJSONObject(i).getString("title");
-            String url = array.getJSONObject(i).getString("url");
-            String visibleUrl = array.getJSONObject(i).getString("visibleUrl");
-            stringBuilder.append("<p>"+title+"\n");
-            stringBuilder.append(" <a href=\""+url+"\">");
-            stringBuilder.append("<em>"+visibleUrl+"</em></a></p>");
-        }
-        Log.i(TAG,"JSON="+stringBuilder.toString());
-        return stringBuilder.toString();
-    }
-
     // Example of using HttpURLConnection for a GET request.  The string getURL
     // is assumed to give the full url with the appended data payload (with the data
     // entries URLEncoded where necessary).  For example,
     //   https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=butterfly
     // The result of the web request is returned as a string by this method.
 
-    public String getRequest(String getURL){
+    public String getRequest(String getURL) {
         URL url = null;
         String result = null;
         try {
@@ -122,7 +83,7 @@ public class GETexample extends AppCompatActivity {
             result = readStream(in);
         } finally {
             // Disconnecting releases resources held by connection so they can be closed or reused.
-            if(urlConnection != null) {
+            if (urlConnection != null) {
                 urlConnection.disconnect();
             }
         }
@@ -131,7 +92,7 @@ public class GETexample extends AppCompatActivity {
 
 
     // Reader for the GET response stream
-    private String readStream(InputStream is){
+    private String readStream(InputStream is) {
 
         // Begin reading the GET input stream line by line
         Log.i(TAG, "\n\nBegin reading GET input stream");
@@ -141,11 +102,11 @@ public class GETexample extends AppCompatActivity {
 
         try {
             String test;
-            while (true){
+            while (true) {
                 test = br.readLine();
-                if(test == null) break;    // readLine() returns null if no more lines
+                if (test == null) break;    // readLine() returns null if no more lines
                 Log.i(TAG, test);
-                total += test+"&nbsp;";
+                total += test + " ";
             }
             isr.close();
             is.close();
@@ -153,8 +114,8 @@ public class GETexample extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, "\n\nThat is all" );
-        Log.i(TAG, "\n test="+total);
+        Log.i(TAG, "\n\nThat is all");
+        Log.i(TAG, "\n test=" + total);
         return total;
     }
 
@@ -165,7 +126,7 @@ public class GETexample extends AppCompatActivity {
     // we aren't going to publish progress since the task should be very short), and (3) a type
     // for the object returned from the background task (in this case it is type String).
 
-    private class BackgroundLoad extends AsyncTask <String, Void, String>{
+    private class BackgroundLoad extends AsyncTask<String, Void, String> {
 
         // Executes the task on a background thread
         @Override
@@ -184,15 +145,15 @@ public class GETexample extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            Log.i(TAG, "Search ="+params[1]);
-            Log.i(TAG, "Address = "+address);
+            Log.i(TAG, "Search =" + params[1]);
+            Log.i(TAG, "Address = " + address);
             GETResponseString = getRequest(address);
             return GETResponseString;
         }
 
         // Executes before the thread run by doInBackground
 
-        protected void onPreExecute () {
+        protected void onPreExecute() {
 
         }
 
@@ -200,7 +161,7 @@ public class GETexample extends AppCompatActivity {
         // passed is the string value returned by doInBackground.
 
         @Override
-        protected void onPostExecute(String s){
+        protected void onPostExecute(String s) {
 
             // Stop the progress dialog
 
@@ -213,9 +174,9 @@ public class GETexample extends AppCompatActivity {
 
             // Display the result in an html format
 
-            s="<p>"+num+" integers chosen randomly between 0 and 100:</p>" +
-                    "<center><h3><pre>"+s+"</pre></h3></center>";
-            s+="Source: <em>https://www.random.org</em>";
+            s = "<p>" + num + " integers chosen randomly between 0 and 100:</p>" +
+                    "<center><h3><pre>" + s + "</pre></h3></center>";
+            s += "Source: <em>https://www.random.org</em>";
             wv.loadData(s, "text/html", "utf-8");
 
         }

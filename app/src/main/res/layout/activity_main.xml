@@ -23,12 +23,6 @@
         android:layout_height="wrap_content"
         android:text="@string/GET_label" />
 
-<!--    <Button
-        android:id="@+id/POST_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/POST_label" />-->
-
     <Button
         android:id="@+id/bitmap_button"
         android:layout_width="match_parent"

@@ -20,9 +20,10 @@ public class BitmapExample extends Activity {
 
     public static final String TAG = "WEBSTREAM";
     ImageView imageview;
+
+    // Alternative source:  "http://heritage.stsci.edu/2001/24/mars/0124b.jpg"; // Mars
     private static final String URL =
-            //"http://heritage.stsci.edu/2001/24/mars/0124b.jpg";  // Mars
-    "http://heritage.stsci.edu/1999/01/images/9901b.jpg";  // Ring Nebula
+            "http://heritage.stsci.edu/1999/01/images/9901b.jpg";  // Ring Nebula
 
     private ProgressBar progressBar;
 
@@ -36,7 +37,7 @@ public class BitmapExample extends Activity {
     }
 
     // Method to load bitmap from web
-    private Bitmap loadBitmap (String url){
+    private Bitmap loadBitmap(String url) {
         Bitmap image = null;
         InputStream inStream = null;
         try {
@@ -52,48 +53,50 @@ public class BitmapExample extends Activity {
     // Method adapted from example in "Beginning Android Application Development", W-M. Lee,
     // pp. 284-287.
 
-    private InputStream openHttpConnection(String urlString)  throws IOException {
+    private InputStream openHttpConnection(String urlString) throws IOException {
         int responseCode = -1;
         InputStream inStream = null;
         URL url = new URL(urlString);
         URLConnection uconn = url.openConnection();
-        if(!(uconn instanceof HttpURLConnection)){
+        if (!(uconn instanceof HttpURLConnection)) {
             throw new IOException("Not a valid HTTP connection");
         }
-        try{
+        try {
             HttpURLConnection httpConn = (HttpURLConnection) uconn;
             httpConn.setRequestMethod("GET");
             httpConn.connect();
             responseCode = httpConn.getResponseCode();
-            if(responseCode == HttpURLConnection.HTTP_OK){
+            if (responseCode == HttpURLConnection.HTTP_OK) {
                 inStream = httpConn.getInputStream();
             }
-        } catch( Exception e) {
+        } catch (Exception e) {
             throw new IOException("Connection Error");
         }
         return inStream;
     }
 
 
-    /** Subclass AsyncTask to download image on a background thread.  The three argument types
-     <Params, Progress, Result> are (1) a type for the input parameters (String in this case),  (2) a
-     type for any published progress during the background task (String in this case), and (3) a type
-     for the objects returned from the background task (if any; in this case it is a Bitmap).  Each of
-     these three arguments stands for an array of the corresponding type, so it is possible
-     to pass multiple arguments of each kind. If one of the argument types is not needed, specify
-     it by Void.  For example, if our task used one or more String input parameters but did not
-     publish progress and did not return anything the pattern would be <String, Void, Void>, where
-     String implies an array of input strings. It is convenient to implement AsyncTask as an inner
-     class (as we do here) because this gives it access to the fields and methods of the
-     enclosing class. Must be launched from the UI thread and may only be invoked once.  Use
-     new BackgroundLoad().execute(arg);
-     to launch it, where arg is the String argument passed to AsyncTask. This constructor returns
-     itself (this), so you could also retain a reference to the AsyncTask object by invoking instead
-     AsyncTask<String, String, Bitmap> at = new BackgroundLoad().execute(arg);
-     for the present example. */
+    /**
+     * Subclass AsyncTask to download image on a background thread.  The three argument types
+     * <Params, Progress, Result> are (1) a type for the input parameters (String in this case),  (2) a
+     * type for any published progress during the background task (String in this case), and (3) a type
+     * for the objects returned from the background task (if any; in this case it is a Bitmap).  Each of
+     * these three arguments stands for an array of the corresponding type, so it is possible
+     * to pass multiple arguments of each kind. If one of the argument types is not needed, specify
+     * it by Void.  For example, if our task used one or more String input parameters but did not
+     * publish progress and did not return anything the pattern would be <String, Void, Void>, where
+     * String implies an array of input strings. It is convenient to implement AsyncTask as an inner
+     * class (as we do here) because this gives it access to the fields and methods of the
+     * enclosing class. Must be launched from the UI thread and may only be invoked once.  Use
+     * new BackgroundLoad().execute(arg);
+     * to launch it, where arg is the String argument passed to AsyncTask. This constructor returns
+     * itself (this), so you could also retain a reference to the AsyncTask object by invoking instead
+     * AsyncTask<String, String, Bitmap> at = new BackgroundLoad().execute(arg);
+     * for the present example.
+     */
 
 
-    private class BackgroundLoad extends AsyncTask <String, String, Bitmap>{
+    private class BackgroundLoad extends AsyncTask<String, String, Bitmap> {
 
         // Executes a task on a background thread that is managed automatically by the system.
         // Note: since this is a background  thread, we are strictly forbidden to touch any views on
@@ -110,7 +113,7 @@ public class BitmapExample extends Activity {
             // Optional: publish progress. This will cause onProgressUpdate to run on the main UI thread,
             // with the argument of publishProgress passed to it.
 
-            publishProgress("Starting image load on background thread\nURL="+url[0]);
+            publishProgress("Starting image load on background thread\nURL=" + url[0]);
 
             // Retrieve the bitmap from the specified url
             Bitmap bitmap = loadBitmap(url[0]);
@@ -125,7 +128,7 @@ public class BitmapExample extends Activity {
 
 
         @Override
-        protected void onPreExecute () {
+        protected void onPreExecute() {
 
         }
 
@@ -152,7 +155,7 @@ public class BitmapExample extends Activity {
         // here.
 
         @Override
-        protected void onPostExecute(Bitmap bitmap){
+        protected void onPostExecute(Bitmap bitmap) {
 
             // Stop the progress dialog
 
