@@ -1,19 +1,25 @@
 package com.lightcone.webdatastreams;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CheckNetStatus extends AppCompatActivity {
 
@@ -58,20 +64,40 @@ public class CheckNetStatus extends AppCompatActivity {
         NetworkInfo netInfo = null;
         InetAddress inetAddress = null;
 
+/*        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+                Toast.makeText(this, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile provider's data plan
+                Toast.makeText(this, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // not connected to the internet
+        }*/
+
         // Get a connectivity manager instance
         ConnectivityManager conman = (ConnectivityManager) getSystemService (
                 Context.CONNECTIVITY_SERVICE);
 
+        netInfo = conman.getActiveNetworkInfo();
+
         // Check wifi status
-        netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if(netInfo != null) wifiAvailable = netInfo.isAvailable();
-        if(netInfo != null) wifiConnected = netInfo.isConnected();
+        //netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if(netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            wifiAvailable = netInfo.isAvailable();
+            wifiConnected = netInfo.isConnected();
+            Log.i(TAG,"Network Type:  "+netInfo.getTypeName());
+        }
 
         // Check telephony status
-        netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if(netInfo != null) phoneAvailable = netInfo.isAvailable();
-        if(netInfo != null) phoneConnected = netInfo.isConnected();
-
+        //netInfo = conman.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if(netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+            phoneAvailable = netInfo.isAvailable();
+            phoneConnected = netInfo.isConnected();
+        }
         try {
             inetAddress = InetAddress.getByName(serverURL);
         } catch (UnknownHostException e) {
@@ -92,7 +118,38 @@ public class CheckNetStatus extends AppCompatActivity {
         if(ipNumber != null)netStatus.putString("ipNumber", ipNumber);
         netStatus.putInt("ipInteger", ipInteger);
 
+        // Works for wifi but not needed since getLocalIpAddress will work for wifi or mobile.
+        /*WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        Log.i(TAG,"WIFI IP="+ipAddress);*/
+
+        Log.i(TAG, "inetAddress="+getLocalIpAddress());
+
         return netStatus;
+
+
+    }
+
+    // Method to find local ip address of the device on wifi or mobile.
+    // See http://chandan-tech.blogspot.com/2010/12/finding-ip-address-of-your-android.html
+    // and http://stackoverflow.com/questions/32141785/android-api-23-inetaddressutils-replacement
+
+    public static String getLocalIpAddress() {
+        try {
+            for (Enumeration en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface intf = (NetworkInterface) en.nextElement();
+                for (Enumeration enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+
+        }
+        return null;
     }
 
 

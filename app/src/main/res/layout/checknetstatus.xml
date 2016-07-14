@@ -20,7 +20,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:ems="10"
-        android:textSize="20sp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
         android:text="@string/netstatus" >
 
         <requestFocus />
