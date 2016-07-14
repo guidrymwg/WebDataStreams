@@ -21,8 +21,8 @@ public class BitmapExample extends Activity {
     public static final String TAG = "WEBSTREAM";
     ImageView imageview;
     private static final String URL =
-            "http://heritage.stsci.edu/2001/24/mars/0124b.jpg";  // Mars
-    //"http://heritage.stsci.edu/1999/01/images/9901b.jpg";  // Ring Nebula
+            //"http://heritage.stsci.edu/2001/24/mars/0124b.jpg";  // Mars
+    "http://heritage.stsci.edu/1999/01/images/9901b.jpg";  // Ring Nebula
 
     private ProgressBar progressBar;
 

@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity implements  android.view.Vie
         checkButton.setOnClickListener(this);
         View getButton = findViewById(R.id.GET_button);
         getButton.setOnClickListener(this);
-        View postButton = findViewById(R.id.POST_button);
-        postButton.setOnClickListener(this);
+/*        View postButton = findViewById(R.id.POST_button);
+        postButton.setOnClickListener(this);*/
         View bitmapButton = findViewById(R.id.bitmap_button);
         bitmapButton.setOnClickListener(this);
     }
@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity implements  android.view.Vie
                 startActivity(j);
                 break;
 
-            case R.id.POST_button:
+/*            case R.id.POST_button:
                 //Intent k = new Intent(this, POSTexample.class);
                 //startActivity(k);
-                break;
+                break;*/
 
             case R.id.bitmap_button:
                 Intent m = new Intent(this, BitmapExample.class);
