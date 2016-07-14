@@ -31,7 +31,7 @@ public class GETexample extends AppCompatActivity {
 
     // This returns num random integers in the interval lower to upper
 
-    String url = "https://www.random.org/integers/?num=" + num + "&min=" + lower + "&min=1&max="
+    String url = "https://www.random.org/integers/?num=" + num + "&min=" + lower + "&max="
             + upper + "&col=1&base=10&format=plain&rnd=new";
     private String getURL = url;
     private String searchString = "";
