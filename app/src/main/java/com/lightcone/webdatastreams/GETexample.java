@@ -34,6 +34,10 @@ import android.widget.ProgressBar;
 public class GETexample extends AppCompatActivity {
 
     private static final String TAG = "WEBSTREAM";
+    private static final int num = 5;
+    private static final int lower = 0;
+    private static final int upper = 100;
+
 
     // Following url address accesses a deprecated Google search API.  See
     // http://code.google.com/apis/websearch/docs/ for documentation and suggested
@@ -45,7 +49,10 @@ public class GETexample extends AppCompatActivity {
     // http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=large+magellanic+cloud&submit=SIMBAD+search
 
     //private String getURL = "http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=Large+Magellanic+Cloud&submit=SIMBAD+search";
-    private String getURL = "https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new";
+    String url = "https://www.random.org/integers/?num="+num+"&min="+lower+"&min=1&max="
+            +upper+"&col=1&base=10&format=plain&rnd=new";
+    private String getURL=url;
+    //private String getURL = "https://www.random.org/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new";
     private String searchString = "";
     //private String getURL = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=";
     //private String searchString = "butterfly";
@@ -58,8 +65,6 @@ public class GETexample extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.getexample);
-
-        searchString = "?Ident="+searchString+"&submit=SIMBAD+search";
 
         // Execute the GET request on a background thread
         progressBar = (ProgressBar) findViewById(R.id.GET_bar);
@@ -144,7 +149,7 @@ public class GETexample extends AppCompatActivity {
                 test = br.readLine();
                 if(test == null) break;    // readLine() returns null if no more lines
                 Log.i(TAG, test);
-                total += test;
+                total += test+"&nbsp;";
             }
             isr.close();
             is.close();
@@ -209,6 +214,11 @@ public class GETexample extends AppCompatActivity {
             // Display the response in a webview
             WebView wv = new WebView(context);
             setContentView(wv);
+
+            // Display the result in an html format
+
+            s="<p>"+num+" integers chosen randomly between 0 and 100:</p>" +
+                    "<center><h3><pre>"+s+"</pre></h3></center>";
             wv.loadData(s, "text/html", "utf-8");
 
             /*// Have to catch following because they are thrown in method processResponse(s)
