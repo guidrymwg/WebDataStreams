@@ -1,12 +1,9 @@
 package com.lightcone.webdatastreams;
 
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,8 +18,7 @@ import android.widget.TextView;
 public class CheckNetStatus extends AppCompatActivity {
 
     private static final String TAG = "WEBSTREAM";
-    // Examples: "127.0.0.1"(= "localhost"); "csep10.phys.utk.edu"; "74.125.47.103"; "google.com";
-    private static final String URL ="google.com";
+    private static final String URL ="";
     private static TextView tv;
     public Bundle netstat;
 
@@ -46,34 +42,14 @@ public class CheckNetStatus extends AppCompatActivity {
     }
 
     // Method to return network and server connections status
-    // See Darcey and Condor, 2nd ed. p. 297
 
-
-    public Bundle networkStatus(String serverURL){
+    public Bundle networkStatus(){
 
         Bundle netStatus = new Bundle();
-        Boolean wifiAvailable = null;
         Boolean wifiConnected = null;
-        Boolean phoneAvailable = null;
         Boolean phoneConnected = null;
-        String ipNumber = null;
-        int ipInteger = 0;
-        NetworkInfo netInfo = null;
-        InetAddress inetAddress = null;
-
-/*        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null) { // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                // connected to wifi
-                Toast.makeText(this, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
-            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                // connected to the mobile provider's data plan
-                Toast.makeText(this, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // not connected to the internet
-        }*/
+        String ipNumber;
+        NetworkInfo netInfo;
 
         // Get a connectivity manager instance
         ConnectivityManager conman = (ConnectivityManager) getSystemService (
@@ -83,48 +59,24 @@ public class CheckNetStatus extends AppCompatActivity {
 
         // Check wifi status
         if(netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            wifiAvailable = netInfo.isAvailable();
             wifiConnected = netInfo.isConnected();
             Log.i(TAG,"Network Type:  "+netInfo.getTypeName());
         }
 
         // Check telephony status
         if(netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-            phoneAvailable = netInfo.isAvailable();
             phoneConnected = netInfo.isConnected();
         }
-        try {
-            inetAddress = InetAddress.getByName(serverURL);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        ipNumber = inetAddress.getHostAddress();
-        //Log.i(TAG, "ipNumber="+ipNumber);
-
-        ipInteger = lookupHost(serverURL);
-        //Log.i(TAG, "ipInteger="+ipInteger);
 
         ipNumber = getLocalIpAddress();
 
-        // Add status booleans to the Bundle netStatus
+        // Add network status variable values to the Bundle netStatus
 
-        if(wifiAvailable != null) netStatus.putBoolean("wifiAvailable", wifiAvailable);
         if(wifiConnected != null) netStatus.putBoolean("wifiConnected", wifiConnected);
-        if(phoneAvailable != null)netStatus.putBoolean("phoneAvailable", phoneAvailable);
         if(phoneConnected != null)netStatus.putBoolean("phoneConnected", phoneConnected);
         if(ipNumber != null)netStatus.putString("ipNumber", ipNumber);
-        netStatus.putInt("ipInteger", ipInteger);
-
-        // Works for wifi but not needed since getLocalIpAddress will work for wifi or mobile.
-        /*WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
-        Log.i(TAG,"WIFI IP="+ipAddress);*/
-
-        Log.i(TAG, "inetAddress="+getLocalIpAddress());
 
         return netStatus;
-
-
     }
 
     // Method to find local ip address of the device on wifi or mobile.
@@ -138,7 +90,7 @@ public class CheckNetStatus extends AppCompatActivity {
                 for (Enumeration enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
-                        return inetAddress.getHostAddress().toString();
+                        return inetAddress.getHostAddress();
                     }
                 }
             }
@@ -147,79 +99,6 @@ public class CheckNetStatus extends AppCompatActivity {
 
         }
         return null;
-    }
-
-
-    /**  Method to look up an ip address and convert it to an integer.
-     Following seems to have a basic problem?  It returns integers but an IP address
-     aaa.bbb.ccc.ddd with aaa larger than 127 tends to exceed the maximum value
-     for an integer (2^31 - 1 = 2147483647).  But methods like requestRouteToHost
-     (int networkType, int hostAddress) from the ConnectivityManager class
-     take an int argument for the ip hostAddress.  Something doesn't add up. Seems like
-     it should be a long int,  but the API doesn't support that.
-
-     The problem is related to all integers in Java being signed.  See
-
-     http://stackoverflow.com/questions/11088/what-is-the-best-way-to-work
-     -around-the-fact-that-all-java-bytes-are-signed
-
-     http://www.darksleep.com/player/JavaAndUnsignedTypes.html
-
-     http://www.jguru.com/faq/view.jsp?EID=13647
-
-     I would assume that the solution to the problem might lie in some manipulation of the
-     sort described in these links to convert the negative integers that you get if say  the ip
-     address aaa.bbb.ccc.ddd has aaa greater than 127 to the correct positive value that
-     you would get if you did the conversion on a calculator.  But I'm still not sure how that
-     solves the specific problem, because the method requestRouteToHost wants an
-     int argument, and the correct positive value for the above example will be flagged as
-     beyond the range for ints.  As a consequence, I don't use requestRouteToHost in the
-     following.  */
-
-    public static int lookupHost(String hostname) {
-        InetAddress inetAddress;
-        try {
-            inetAddress = InetAddress.getByName(hostname);
-            Log.i(TAG, "inetAddress="+inetAddress);
-            String ipNumber = inetAddress.getHostAddress();
-            Log.i(TAG, "ipNumber="+ipNumber);
-            try {
-                Log.i(TAG, "isReachable="+inetAddress.isReachable(5000));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (UnknownHostException e) {
-            return -1;
-        }
-
-        // Convert IP address to Byte array
-        byte [] addBytes;
-        int add;
-        //Log.i(TAG, "***** inetAddress ="+inetAddress);
-        addBytes = inetAddress.getAddress();
-
-        for(int i=0; i<addBytes.length; i++){
-            Log.i(TAG, "  Byte "+i+"="+addBytes[i]);
-        }
-        //Log.i(TAG, "\ninetAddress: "+inetAddress.getHostAddress());
-
-        // Convert ip dot-form address to ip integer. Copied from
-        // http://stackoverflow.com/questions/2295998/requestroutetohost-ip-argument
-        // but with the byte order reversed.
-
-        add = ((addBytes[0] & 0xff) << 24)
-                | ((addBytes[1] & 0xff) << 16)
-                | ((addBytes[2] & 0xff) << 8)
-                |  (addBytes[3] & 0xff);
-
-        Log.i(TAG, "IPinteger: "+add);
-
-        // To check values, see http://www.aboutmyip.com/AboutMyXApp/IP2Integer.jsp.
-        // Above is equivalent to the more pedestrian
-        //     addr=16777216*addBytes[0]+65536*addBytes[1]+256*addBytes[2]+addBytes[3];
-        // where 16777216=256^3 and 65536=256^2
-
-        return add;
     }
 
 
@@ -255,7 +134,7 @@ public class CheckNetStatus extends AppCompatActivity {
 
             publishProgress("\n\nStarting background thread\n");
 
-            return networkStatus(url[0]) ;
+            return networkStatus() ;
         }
 
         // Executes on the main UI thread before the thread run by doInBackground.  Since
