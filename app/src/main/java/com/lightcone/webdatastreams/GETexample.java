@@ -141,8 +141,7 @@ public class GETexample extends AppCompatActivity {
 
             String address = null;
             try {
-                //address = params[0] + URLEncoder.encode(params[1], "ASCII");
-                address =  URLEncoder.encode(params[0]+params[1], "ASCII");
+                address = params[0] + URLEncoder.encode(params[1], "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
