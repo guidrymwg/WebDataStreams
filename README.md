@@ -14,4 +14,4 @@ First download this project using the <b>Clone or Download</b> button, either by
 http://eagle.phys.utk.edu/guidry/android/ and selecting <i>Resources > Packages for All Projects</i> from the menu.
 
 A complete description of this project, including steps to build it from scratch, may be found by 
-going to http://eagle.phys.utk.edu/guidry/android/ and selecting <em>Web Data Streams I</em> from the menu.
+going to http://eagle.phys.utk.edu/guidry/android/ and selecting <em>Web Data Streams</em> from the menu.
